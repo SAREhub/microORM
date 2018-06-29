@@ -1,6 +1,11 @@
 {
+  "name": "microORM",
   "description": "simple implementation of orm",
-  "license": "proprietary",
+  "license": "Apache-2.0",
+  "keywords": [
+    "SARE",
+    "SAREhub"
+  ],
   "require-dev": {
     "phpunit/phpunit": "6.*",
     "mockery/mockery": "1.1.*"
