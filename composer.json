@@ -1,5 +1,5 @@
 {
-  "name": "microorm",
+  "name": "sarehub/microorm",
   "description": "simple implementation of orm",
   "license": "Apache-2.0",
   "keywords": [
