@@ -8,7 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
 use SAREhub\MicroORM\Connection\PrefixedConnectionFactory;
-use SAREhub\MicroORM\Schema\DatabaseSchema;
+use SAREhub\MicroORM\Schema\CreateDatabaseSchema;
 
 class DatabaseManager
 {
@@ -23,10 +23,11 @@ class DatabaseManager
     }
 
     /**
-     * @param DatabaseSchema $schema
+     * @param CreateDatabaseSchema $schema
      * @throws DBALException
      */
-    public function createDatabase(DatabaseSchema $schema): void {
+    public function createDatabase(CreateDatabaseSchema $schema): void
+    {
         $schema = clone $schema;
         $schema->setName($this->getPrefixed($schema->getName()));
         $this->getGlobalConnection()->exec($schema->toSql($this->getGlobalConnection()->getDatabasePlatform()));
