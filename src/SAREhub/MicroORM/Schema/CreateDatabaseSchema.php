@@ -6,7 +6,7 @@ namespace SAREhub\MicroORM\Schema;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
-class DatabaseSchema
+class CreateDatabaseSchema
 {
     private const SQL_QUERY_FORMAT = "CREATE DATABASE %s CHARACTER SET %s COLLATE %s";
 
@@ -30,19 +30,19 @@ class DatabaseSchema
         return new self();
     }
 
-    public function setName(string $name): DatabaseSchema
+    public function setName(string $name): CreateDatabaseSchema
     {
         $this->name = $name;
         return $this;
     }
 
-    public function setCharacterSet(string $characterSet): DatabaseSchema
+    public function setCharacterSet(string $characterSet): CreateDatabaseSchema
     {
         $this->characterSet = $characterSet;
         return $this;
     }
 
-    public function setCollate(string $collate): DatabaseSchema
+    public function setCollate(string $collate): CreateDatabaseSchema
     {
         $this->collate = $collate;
         return $this;
