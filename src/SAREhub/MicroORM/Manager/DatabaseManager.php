@@ -12,6 +12,8 @@ use SAREhub\MicroORM\Schema\CreateDatabaseSchema;
 
 class DatabaseManager
 {
+    private const CREATE_DATABASE_SQL_FORMAT = "CREATE DATABASE %s CHARACTER SET %s COLLATE %s";
+
     /**
      * @var PrefixedConnectionFactory
      */
@@ -23,14 +25,16 @@ class DatabaseManager
     }
 
     /**
-     * @param CreateDatabaseSchema $schema
+     * @param string $name
+     * @param null|CreateDatabaseOptions $options
      * @throws DBALException
      */
-    public function createDatabase(CreateDatabaseSchema $schema): void
+    public function createDatabase(string $name, ?CreateDatabaseOptions $options = null): void
     {
-        $schema = clone $schema;
-        $schema->setName($this->getPrefixed($schema->getName()));
-        $this->getGlobalConnection()->exec($schema->toSql($this->getGlobalConnection()->getDatabasePlatform()));
+        $options = $options ?? new CreateDatabaseOptions();
+        $name = $this->getPrefixed($name);
+        $sql = sprintf(self::CREATE_DATABASE_SQL_FORMAT, $name, $options->getCharacterSet(), $options->getCollate());
+        $this->getGlobalConnection()->exec($sql);
     }
 
     /**
