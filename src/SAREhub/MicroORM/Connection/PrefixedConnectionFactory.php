@@ -12,6 +12,7 @@ class PrefixedConnectionFactory implements ConnectionFactory
      * @var string
      */
     private $prefix;
+
     /**
      * @var ConnectionFactory
      */

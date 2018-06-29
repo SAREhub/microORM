@@ -8,8 +8,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
 use SAREhub\MicroORM\Connection\PrefixedConnectionFactory;
+use SAREhub\MicroORM\Schema\DatabaseSchema;
 
-class PrefixedDatabaseManager
+class DatabaseManager
 {
     /**
      * @var PrefixedConnectionFactory
@@ -22,13 +23,13 @@ class PrefixedDatabaseManager
     }
 
     /**
-     * @param string $name
+     * @param DatabaseSchema $schema
      * @throws DBALException
      */
-    public function createDatabase(string $name): void
-    {
-        $name = $this->getPrefixed($name);
-        $this->getGlobalConnection()->exec("CREATE DATABASE $name CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+    public function createDatabase(DatabaseSchema $schema): void {
+        $schema = clone $schema;
+        $schema->setName($this->getPrefixed($schema->getName()));
+        $this->getGlobalConnection()->exec($schema->toSql($this->getGlobalConnection()->getDatabasePlatform()));
     }
 
     /**

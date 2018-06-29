@@ -5,7 +5,7 @@ namespace SAREhub\MicroORM\Entity;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
-use SAREhub\MicroORM\Page\PageInfo;
+use SAREhub\MicroORM\Pagination\PageInfo;
 
 abstract class EntityRepository
 {
@@ -68,13 +68,24 @@ abstract class EntityRepository
         return $data;
     }
 
+    /**
+     * @param $id
+     * @return Entity
+     * @throws EntityNotFoundException
+     */
     public function findById($id)
     {
         $result = $this->getManager()->getConnection()->createQueryBuilder()
             ->select('*')
             ->from($this->getTable())
-            ->where('id = ?')->setParameter(0, $id, static::getColumnTypes()[Entity::ID_ENTRY])->execute();
-        return $this->createFromArray($result->fetch(\PDO::FETCH_ASSOC));
+            ->where('id = ?')
+            ->setParameter(0, $id, static::getColumnTypes()[Entity::ID_ENTRY])
+            ->execute()
+            ->fetch(\PDO::FETCH_ASSOC);
+
+        if(empty($result)) throw new EntityNotFoundException("entity not found", 404);
+
+        return $this->createFromArray($result);
     }
 
     /**
