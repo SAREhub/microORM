@@ -4,7 +4,9 @@
   "license": "Apache-2.0",
   "keywords": [
     "SARE",
-    "SAREhub"
+    "SAREhub",
+    "MySQL",
+    "ORM"
   ],
   "require-dev": {
     "phpunit/phpunit": "6.*",
@@ -12,6 +14,7 @@
   },
   "require": {
     "php": "^7.1",
+    "ext-json": "",
     "doctrine/dbal": "^2.6",
     "sarehub/commons": "0.7.*"
   },
