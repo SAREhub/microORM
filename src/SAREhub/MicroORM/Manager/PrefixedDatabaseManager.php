@@ -29,7 +29,7 @@ class PrefixedDatabaseManager implements DatabaseManager
     private $prefix;
 
 
-    public function __construct(DatabaseManager $decorated, string $prefix = "")
+    public function __construct(string $prefix, DatabaseManager $decorated)
     {
         $this->decorated = $decorated;
         $this->prefix = $prefix;

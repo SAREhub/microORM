@@ -37,7 +37,7 @@ class PrefixedDatabaseManagerTest extends TestCase
     protected function setUp()
     {
         $this->decorated = \Mockery::mock(DatabaseManager::class);
-        $this->manager = new PrefixedDatabaseManager($this->decorated, "test_");
+        $this->manager = new PrefixedDatabaseManager("test_", $this->decorated);
     }
 
     /**
