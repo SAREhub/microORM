@@ -16,16 +16,22 @@
 namespace SAREhub\MicroORM\Connection;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
 
-interface ConnectionFactory
+class ConnectionPingChecker
 {
     /**
-     * Returns connection with selected database
-     * @param ConnectionOptions $options
-     * @param string $databaseName
-     * @throws DBALException
-     * @return Connection
+     * @var Connection
      */
-    public function create(ConnectionOptions $options, string $databaseName = ""): Connection;
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function check(): bool
+    {
+        return $this->connection->ping();
+    }
+
 }
