@@ -24,33 +24,9 @@ class PrefixedConnectionFactory implements ConnectionFactory
         $this->factory = $factory;
     }
 
-    public function createToDatabase(string $databaseName): Connection
+    public function create(ConnectionOptions $options, string $databaseName = ""): Connection
     {
-        return $this->factory->createToDatabase($this->getPrefixed($databaseName));
-    }
-
-    public function createToHost(): Connection
-    {
-        return $this->factory->createToHost();
-    }
-
-    public function hasPrefix(string $string): bool
-    {
-        return strpos($string, $this->getPrefix()) === 0;
-    }
-
-    public function stripPrefix(string $string): string
-    {
-        return substr($string, strlen($this->getPrefix()));
-    }
-
-    public function getPrefixed(string $string): string
-    {
-        return $this->getPrefix() . $string;
-    }
-
-    public function getPrefix(): string
-    {
-        return $this->prefix;
+        $databaseName = empty($databaseName) ? "" : $this->prefix . $databaseName;
+        return $this->factory->create($options, $databaseName);
     }
 }
