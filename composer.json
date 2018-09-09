@@ -10,14 +10,17 @@
   ],
   "require-dev": {
     "phpunit/phpunit": "6.*",
-    "mockery/mockery": "1.1.*"
+    "mockery/mockery": "1.1.*",
+    "sarehub/dockerutil": "0.3.*"
   },
   "require": {
     "php": "^7.1",
-    "ext-json": "",
-    "ext-pdo": "",
+    "ext-json": "*",
+    "ext-pdo": "*",
     "doctrine/dbal": "^2.6",
-    "sarehub/commons": "0.7.*"
+    "sarehub/commons": "0.7.*",
+    "minimalcode/php-java-optional": "v1.0.8RC"
+
   },
   "autoload": {
     "psr-4": {
