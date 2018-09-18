@@ -15,13 +15,13 @@
 
 namespace SAREhub\MicroORM\Connection;
 
-
+use Doctrine\DBAL\Platforms\MySQL57Platform;
 use SAREhub\Commons\Misc\EnvironmentHelper;
 use SAREhub\Commons\Misc\InvokableProvider;
 use SAREhub\Commons\Secret\SecretValueNotFoundException;
 use SAREhub\Commons\Secret\SecretValueProvider;
 
-class EnvConnectionOptionsProvider extends InvokableProvider
+class MysqlEnvConnectionOptionsProvider extends InvokableProvider
 {
     const ENV_HOST = "HOST";
     const ENV_PORT = "PORT";
@@ -29,11 +29,16 @@ class EnvConnectionOptionsProvider extends InvokableProvider
     const ENV_USER = "USER";
     const ENV_PASSWORD_SECRET = "PASSWORD_SECRET";
 
-    const ENV_SCHEMA = [
-        self::ENV_HOST => ConnectionOptions::DEFAULT_HOST,
-        self::ENV_PORT => ConnectionOptions::DEFAULT_PORT,
-        self::ENV_USER => ConnectionOptions::DEFAULT_USER,
-        self::ENV_PASSWORD_SECRET => ""
+    const ENV_DRIVER = "DRIVER";
+    const ENV_PLATFORM = "PLATFORM";
+
+    const ENV_PARAMS_SCHEMA = [
+        self::ENV_HOST => "localhost",
+        self::ENV_PORT => 3306,
+        self::ENV_USER => "root",
+        self::ENV_PASSWORD_SECRET => "",
+        self::ENV_DRIVER => "pdo_mysql",
+        self::ENV_PLATFORM => "MySQL57"
     ];
 
     const DEFAULT_ENV_PREFIX = "DATABASE_";
@@ -57,11 +62,9 @@ class EnvConnectionOptionsProvider extends InvokableProvider
      */
     public function get()
     {
-        $env = EnvironmentHelper::getVars(self::ENV_SCHEMA, $this->envPrefix);
-        return ConnectionOptions::newInstance()
-            ->setHost($env[self::ENV_HOST])
-            ->setPort($env[self::ENV_PORT])
-            ->setUser($env[self::ENV_USER])
-            ->setPassword($this->secretValueProvider->get($env[self::ENV_PASSWORD_SECRET]));
+        $env = EnvironmentHelper::getVars(self::ENV_PARAMS_SCHEMA, $this->envPrefix);
+        $env[self::ENV_PLATFORM] = new ${"\\Doctrine\\DBAL\\Platforms\\" . $env[self::ENV_PLATFORM] . "Platform"}();
+        $env[self::ENV_PASSWORD_SECRET] = $this->secretValueProvider->get($env[self::ENV_PASSWORD_SECRET]);
+        return new ConnectionOptions(array_change_key_case($env, CASE_LOWER));
     }
 }

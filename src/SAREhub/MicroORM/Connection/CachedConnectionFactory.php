@@ -46,13 +46,6 @@ class CachedConnectionFactory implements ConnectionFactory
 
     private function createCacheKey(ConnectionOptions $options, string $databaseName): string
     {
-        return implode(":", [
-            $options->getHost(),
-            $options->getPort(),
-            $options->getUser(),
-            $databaseName
-        ]);
+        return implode(":", $options->getParams()) . ":$databaseName";
     }
-
-
 }

@@ -41,11 +41,17 @@ class PrefixedConnectionFactoryTest extends TestCase
      */
     private $prefixedFactory;
 
+    /**
+     * @var ConnectionOptions
+     */
+    private $options;
+
     protected function setUp()
     {
         $this->prefix = "test_prefix_";
         $this->factory = \Mockery::mock(ConnectionFactory::class);
         $this->prefixedFactory = new PrefixedConnectionFactory($this->prefix, $this->factory);
+        $this->options = new ConnectionOptions([]);
     }
 
     /**
@@ -53,12 +59,11 @@ class PrefixedConnectionFactoryTest extends TestCase
      */
     public function testCreateWhenNotEmptyDatabaseName()
     {
-        $options = ConnectionOptions::newInstance();
         $name = "test_name";
         $expected = \Mockery::mock(Connection::class);
-        $this->factory->expects("create")->with($options, $this->prefix . $name)->andReturn($expected);
+        $this->factory->expects("create")->with($this->options, $this->prefix . $name)->andReturn($expected);
 
-        $current = $this->prefixedFactory->create($options, $name);
+        $current = $this->prefixedFactory->create($this->options, $name);
 
         $this->assertSame($expected, $current);
     }
@@ -68,11 +73,10 @@ class PrefixedConnectionFactoryTest extends TestCase
      */
     public function testCreateWhenEmptyDatabaseName()
     {
-        $options = ConnectionOptions::newInstance();
         $expected = \Mockery::mock(Connection::class);
-        $this->factory->expects("create")->with($options, "")->andReturn($expected);
+        $this->factory->expects("create")->with($this->options, "")->andReturn($expected);
 
-        $current = $this->prefixedFactory->create($options, "");
+        $current = $this->prefixedFactory->create($this->options, "");
 
         $this->assertSame($expected, $current);
     }

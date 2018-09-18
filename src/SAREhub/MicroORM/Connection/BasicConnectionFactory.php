@@ -23,20 +23,18 @@ class BasicConnectionFactory implements ConnectionFactory
 {
     public function create(ConnectionOptions $options, string $databaseName = ""): Connection
     {
-        return DriverManager::getConnection(
-            $this->createParams($options, $databaseName),
-
-            $options->getConfiguration());
+        $params = $this->createParams($options, $databaseName);
+        return DriverManager::getConnection($params, $options->getConfiguration());
     }
 
     private function createParams(ConnectionOptions $options, string $databaseName): array
     {
-        return empty($databaseName) ? $options->toArray() : $this->createDatabaseParams($options, $databaseName);
+        return empty($databaseName) ? $options->getParams() : $this->createDatabaseParams($options, $databaseName);
     }
 
     private function createDatabaseParams(ConnectionOptions $options, string $databaseName): array
     {
-        $params = $options->toArray();
+        $params = $options->getParams();
         $params["dbname"] = $databaseName;
         return $params;
     }

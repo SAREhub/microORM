@@ -45,7 +45,7 @@ class CachedConnectionFactoryTest extends TestCase
     {
         $this->factory = \Mockery::mock(ConnectionFactory::class);
         $this->cachedFactory = new CachedConnectionFactory($this->factory);
-        $this->options = ConnectionOptions::newInstance();
+        $this->options = new ConnectionOptions(["param1" => 1, "param2" => 2]);
     }
 
     /**

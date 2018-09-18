@@ -18,128 +18,32 @@ namespace SAREhub\MicroORM\Connection;
 
 use Doctrine\DBAL\Configuration;
 
+
 class ConnectionOptions
 {
-    const DEFAULT_HOST = "localhost";
     /**
-     * @var string
+     * @var  array
      */
-    private $host = self::DEFAULT_HOST;
-
-    const DEFAULT_PORT = 3306;
-    /**
-     * @var int
-     */
-    private $port = self::DEFAULT_PORT;
-
-    const DEFAULT_USER = "root";
-    /**
-     * @var string
-     */
-    private $user = self::DEFAULT_USER;
-
-    /**
-     * @var string
-     */
-    private $password = "";
-
-    const DEFAULT_DRIVER = "pdo_mysql";
-
-    /**
-     * @var string
-     */
-    private $driver = self::DEFAULT_DRIVER;
+    private $params;
 
     /**
      * @var Configuration
      */
     private $configuration;
 
-    public function __construct()
+    public function __construct(array $params, ?Configuration $configuration = null)
     {
-        $this->configuration = new Configuration();
+        $this->params = $params;
+        $this->configuration = $configuration ?? new Configuration();
     }
 
-    public static function newInstance(): self
+    public function getParams(): array
     {
-        return new self();
-    }
-
-    public function getHost(): string
-    {
-        return $this->host;
-    }
-
-    public function setHost(string $host): ConnectionOptions
-    {
-        $this->host = $host;
-        return $this;
-    }
-
-    public function getPort(): int
-    {
-        return $this->port;
-    }
-
-    public function setPort(int $port): ConnectionOptions
-    {
-        $this->port = $port;
-        return $this;
-    }
-
-    public function getUser(): string
-    {
-        return $this->user;
-    }
-
-    public function setUser(string $user): ConnectionOptions
-    {
-        $this->user = $user;
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-
-    public function setPassword(string $password): ConnectionOptions
-    {
-        $this->password = $password;
-        return $this;
-    }
-
-    public function getDriver(): string
-    {
-        return $this->driver;
-    }
-
-    public function setDriver(string $driver): ConnectionOptions
-    {
-        $this->driver = $driver;
-        return $this;
+        return $this->params;
     }
 
     public function getConfiguration(): Configuration
     {
         return $this->configuration;
-    }
-
-    public function setConfiguration(Configuration $configuration): ConnectionOptions
-    {
-        $this->configuration = $configuration;
-        return $this;
-    }
-
-    public function toArray()
-    {
-        return [
-            "host" => $this->getHost(),
-            "port" => $this->getPort(),
-            "user" => $this->getUser(),
-            "password" => $this->getPassword(),
-            "driver" => $this->getDriver(),
-        ];
     }
 }
