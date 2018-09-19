@@ -15,13 +15,13 @@
 
 namespace SAREhub\MicroORM\Connection;
 
-use Doctrine\DBAL\Platforms\MySQL57Platform;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use SAREhub\Commons\Misc\EnvironmentHelper;
 use SAREhub\Commons\Misc\InvokableProvider;
 use SAREhub\Commons\Secret\SecretValueNotFoundException;
 use SAREhub\Commons\Secret\SecretValueProvider;
 
-class MysqlEnvConnectionOptionsProvider extends InvokableProvider
+class MySQLEnvConnectionOptionsProvider extends InvokableProvider
 {
     const ENV_HOST = "HOST";
     const ENV_PORT = "PORT";
@@ -63,8 +63,14 @@ class MysqlEnvConnectionOptionsProvider extends InvokableProvider
     public function get()
     {
         $env = EnvironmentHelper::getVars(self::ENV_PARAMS_SCHEMA, $this->envPrefix);
-        $env[self::ENV_PLATFORM] = new ${"\\Doctrine\\DBAL\\Platforms\\" . $env[self::ENV_PLATFORM] . "Platform"}();
+        $env[self::ENV_PLATFORM] = $this->createPlatformFromName($env[self::ENV_PLATFORM]);
         $env[self::ENV_PASSWORD_SECRET] = $this->secretValueProvider->get($env[self::ENV_PASSWORD_SECRET]);
         return new ConnectionOptions(array_change_key_case($env, CASE_LOWER));
+    }
+
+    private function createPlatformFromName(string $name): AbstractPlatform
+    {
+        $platformClass = "\\Doctrine\\DBAL\\Platforms\\${name}Platform";
+        return new $platformClass();
     }
 }
