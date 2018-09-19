@@ -64,8 +64,19 @@ class MySQLEnvConnectionOptionsProvider extends InvokableProvider
     {
         $env = EnvironmentHelper::getVars(self::ENV_PARAMS_SCHEMA, $this->envPrefix);
         $env[self::ENV_PLATFORM] = $this->createPlatformFromName($env[self::ENV_PLATFORM]);
-        $env[self::ENV_PASSWORD_SECRET] = $this->secretValueProvider->get($env[self::ENV_PASSWORD_SECRET]);
+        $this->replacePasswordSecretWithValue($env);
         return new ConnectionOptions(array_change_key_case($env, CASE_LOWER));
+    }
+
+    /**
+     * @param array $env
+     * @throws SecretValueNotFoundException
+     */
+    private function replacePasswordSecretWithValue(array &$env): void
+    {
+        $password = $this->secretValueProvider->get($env[self::ENV_PASSWORD_SECRET]);
+        unset($env[self::ENV_PASSWORD_SECRET]);
+        $env[self::ENV_PASSWORD_SECRET] = $password;
     }
 
     private function createPlatformFromName(string $name): AbstractPlatform
