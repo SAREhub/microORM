@@ -76,7 +76,7 @@ class MySQLEnvConnectionOptionsProvider extends InvokableProvider
     {
         $password = $this->secretValueProvider->get($env[self::ENV_PASSWORD_SECRET]);
         unset($env[self::ENV_PASSWORD_SECRET]);
-        $env[self::ENV_PASSWORD_SECRET] = $password;
+        $env["password"] = $password;
     }
 
     private function createPlatformFromName(string $name): AbstractPlatform
