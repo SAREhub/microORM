@@ -15,7 +15,6 @@
 
 namespace SAREhub\MicroORM\Manager;
 
-use Doctrine\DBAL\DBALException;
 
 interface DatabaseManager
 {
@@ -23,26 +22,21 @@ interface DatabaseManager
     /**
      * @param string $name
      * @param null|CreateDatabaseOptions $options
-     * @throws DBALException
      */
     public function create(string $name, ?CreateDatabaseOptions $options = null): void;
 
     /**
      * @param string $name
-     * @throws DBALException
      */
     public function drop(string $name);
 
     /**
      * @param string $name
-     * @throws DBALException
      * @return bool
      */
     public function exists(string $name): bool;
 
     /**
-     * @param string $name
-     * @throws DBALException
      * @return array
      */
     public function getList(): array;

@@ -32,30 +32,29 @@ class BasicDatabaseManager implements DatabaseManager
         $this->connection = $connection;
     }
 
-    /**
-     * @param string $name
-     * @param null|CreateDatabaseOptions $options
-     * @throws DBALException
-     */
     public function create(string $name, ?CreateDatabaseOptions $options = null): void
     {
-        $options = $options ?? new CreateDatabaseOptions();
-        $sql = sprintf(self::CREATE_DATABASE_SQL_FORMAT,
-            ($options->isIfNotExists()) ? "IF NOT EXISTS" : "",
-            $name,
-            $options->getCharacterSet(),
-            $options->getCollate()
-        );
-        $this->getConnection()->exec($sql);
+        try {
+            $options = $options ?? new CreateDatabaseOptions();
+            $sql = sprintf(self::CREATE_DATABASE_SQL_FORMAT,
+                ($options->isIfNotExists()) ? "IF NOT EXISTS" : "",
+                $name,
+                $options->getCharacterSet(),
+                $options->getCollate()
+            );
+            $this->getConnection()->exec($sql);
+        } catch (DBALException $e) {
+            throw new \RuntimeException("database create error", 0, $e);
+        }
     }
 
-    /**
-     * @param string $name
-     * @throws DBALException
-     */
     public function drop(string $name): void
     {
-        $this->getConnection()->exec("DROP DATABASE $name");
+        try {
+            $this->getConnection()->exec("DROP DATABASE $name");
+        } catch (DBALException $e) {
+            throw new \RuntimeException("database drop error", 0, $e);
+        }
     }
 
     public function exists(string $name): bool
