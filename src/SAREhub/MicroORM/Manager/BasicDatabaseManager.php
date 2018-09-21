@@ -17,6 +17,7 @@ namespace SAREhub\MicroORM\Manager;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use SAREhub\MicroORM\DatabaseException;
 
 class BasicDatabaseManager implements DatabaseManager
 {
@@ -44,7 +45,7 @@ class BasicDatabaseManager implements DatabaseManager
             );
             $this->getConnection()->exec($sql);
         } catch (DBALException $e) {
-            throw new \RuntimeException("database create error", 0, $e);
+            throw DatabaseException::createFromDBAL($e, "database create error");
         }
     }
 
@@ -53,7 +54,7 @@ class BasicDatabaseManager implements DatabaseManager
         try {
             $this->getConnection()->exec("DROP DATABASE $name");
         } catch (DBALException $e) {
-            throw new \RuntimeException("database drop error", 0, $e);
+            throw DatabaseException::createFromDBAL($e, "database drop error");
         }
     }
 
