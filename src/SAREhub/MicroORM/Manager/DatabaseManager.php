@@ -33,8 +33,17 @@ interface DatabaseManager
      */
     public function drop(string $name);
 
+    /**
+     * @param string $name
+     * @throws DBALException
+     * @return bool
+     */
     public function exists(string $name): bool;
 
-
+    /**
+     * @param string $name
+     * @throws DBALException
+     * @return array
+     */
     public function getList(): array;
 }

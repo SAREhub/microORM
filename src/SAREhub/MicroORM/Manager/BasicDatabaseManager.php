@@ -20,7 +20,7 @@ use Doctrine\DBAL\DBALException;
 
 class BasicDatabaseManager implements DatabaseManager
 {
-    private const CREATE_DATABASE_SQL_FORMAT = "CREATE DATABASE %s CHARACTER SET %s COLLATE %s";
+    private const CREATE_DATABASE_SQL_FORMAT = "CREATE DATABASE %s %s CHARACTER SET %s COLLATE %s";
 
     /**
      * @var Connection
@@ -40,7 +40,12 @@ class BasicDatabaseManager implements DatabaseManager
     public function create(string $name, ?CreateDatabaseOptions $options = null): void
     {
         $options = $options ?? new CreateDatabaseOptions();
-        $sql = sprintf(self::CREATE_DATABASE_SQL_FORMAT, $name, $options->getCharacterSet(), $options->getCollate());
+        $sql = sprintf(self::CREATE_DATABASE_SQL_FORMAT,
+            ($options->isIfNotExists()) ? "IF NOT EXISTS" : "",
+            $name,
+            $options->getCharacterSet(),
+            $options->getCollate()
+        );
         $this->getConnection()->exec($sql);
     }
 
