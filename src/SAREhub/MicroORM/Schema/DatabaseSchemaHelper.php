@@ -18,38 +18,58 @@ namespace SAREhub\MicroORM\Schema;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema;
 
-class DatabaseSchemaManager
+class DatabaseSchemaHelper
 {
     /**
      * @var Connection
      */
     private $connection;
 
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
     /**
-     * @param Connection $connection
      * @param Schema $schema
      * @throws DBALException
      */
-    public function createSchema(Connection $connection, Schema $schema)
+    public function create(Schema $schema)
     {
-        $queries = $schema->toSql($connection->getDatabasePlatform());
+        $queries = $schema->toSql($this->getDatabasePlatform());
+        $this->executeQueries($queries);
+    }
+
+    /**
+     * @param Schema $schema
+     * @throws DBALException
+     */
+    public function drop(Schema $schema)
+    {
+        $queries = $schema->toDropSql($this->getDatabasePlatform());
+        $this->executeQueries($queries);
+    }
+
+    /**
+     * @param array $queries
+     * @throws DBALException
+     */
+    private function executeQueries(array $queries)
+    {
         foreach ($queries as $query) {
-            $connection->exec($query);
+            $this->connection->exec($query);
         }
     }
 
     /**
-     * @param Connection $connection
-     * @param Schema $schema
+     * @return AbstractPlatform
      * @throws DBALException
      */
-    public function dropSchema(Connection $connection, Schema $schema)
+    private function getDatabasePlatform(): AbstractPlatform
     {
-        $queries = $schema->toDropSql($connection->getDatabasePlatform());
-        foreach ($queries as $query) {
-            $connection->exec($query);
-        }
+        return $this->connection->getDatabasePlatform();
     }
 }
