@@ -20,6 +20,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema;
+use SAREhub\MicroORM\DatabaseException;
 
 class DatabaseSchemaHelper
 {
@@ -35,7 +36,6 @@ class DatabaseSchemaHelper
 
     /**
      * @param Schema $schema
-     * @throws DBALException
      */
     public function create(Schema $schema)
     {
@@ -45,7 +45,6 @@ class DatabaseSchemaHelper
 
     /**
      * @param Schema $schema
-     * @throws DBALException
      */
     public function drop(Schema $schema)
     {
@@ -55,21 +54,24 @@ class DatabaseSchemaHelper
 
     /**
      * @param array $queries
-     * @throws DBALException
      */
     private function executeQueries(array $queries)
     {
-        foreach ($queries as $query) {
-            $this->connection->exec($query);
+        try {
+            foreach ($queries as $query) {
+                $this->connection->exec($query);
+            }
+        } catch (DBALException $e) {
+            throw DatabaseException::createFromDBAL($e, "database schema update error");
         }
     }
 
-    /**
-     * @return AbstractPlatform
-     * @throws DBALException
-     */
     private function getDatabasePlatform(): AbstractPlatform
     {
-        return $this->connection->getDatabasePlatform();
+        try {
+            return $this->connection->getDatabasePlatform();
+        } catch (DBALException $e) {
+            throw DatabaseException::createFromDBAL($e, "database platform get error");
+        }
     }
 }
