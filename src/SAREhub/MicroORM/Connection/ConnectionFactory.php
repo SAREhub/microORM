@@ -17,6 +17,7 @@ namespace SAREhub\MicroORM\Connection;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use SAREhub\MicroORM\DatabaseException;
 
 interface ConnectionFactory
 {
@@ -24,7 +25,7 @@ interface ConnectionFactory
      * Returns connection with selected database
      * @param ConnectionOptions $options
      * @param string $databaseName
-     * @throws DBALException
+     * @throws DatabaseException
      * @return Connection
      */
     public function create(ConnectionOptions $options, string $databaseName = ""): Connection;

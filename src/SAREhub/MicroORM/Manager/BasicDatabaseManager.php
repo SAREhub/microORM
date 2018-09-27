@@ -45,7 +45,7 @@ class BasicDatabaseManager implements DatabaseManager
             );
             $this->getConnection()->exec($sql);
         } catch (DBALException $e) {
-            throw DatabaseException::createFromDBAL($e, "database create error");
+            throw DatabaseException::createFromDBAL($e, "create '$name' database");
         }
     }
 
@@ -54,7 +54,7 @@ class BasicDatabaseManager implements DatabaseManager
         try {
             $this->getConnection()->exec("DROP DATABASE $name");
         } catch (DBALException $e) {
-            throw DatabaseException::createFromDBAL($e, "database drop error");
+            throw DatabaseException::createFromDBAL($e, "drop '$name' database");
         }
     }
 

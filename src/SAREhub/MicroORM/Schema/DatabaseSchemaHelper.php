@@ -62,7 +62,8 @@ class DatabaseSchemaHelper
                 $this->connection->exec($query);
             }
         } catch (DBALException $e) {
-            throw DatabaseException::createFromDBAL($e, "database schema update error");
+            $database = $this->connection->getDatabase();
+            throw DatabaseException::createFromDBAL($e, "update schema on '$database'");
         }
     }
 
@@ -71,7 +72,7 @@ class DatabaseSchemaHelper
         try {
             return $this->connection->getDatabasePlatform();
         } catch (DBALException $e) {
-            throw DatabaseException::createFromDBAL($e, "database platform get error");
+            throw DatabaseException::createFromDBAL($e, "get database platform");
         }
     }
 }
