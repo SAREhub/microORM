@@ -13,35 +13,37 @@
  * limitations under the License.
  */
 
-namespace SAREhub\MicroORM\Manager;
+namespace SAREhub\MicroORM\Connection;
 
 
-use SAREhub\MicroORM\DatabaseException;
+use Doctrine\DBAL\Configuration;
 
-interface DatabaseManager
+
+class ConnectionOptions
 {
+    /**
+     * @var  array
+     */
+    private $params;
 
     /**
-     * @param string $name
-     * @param null|CreateDatabaseOptions $options
-     * @throws DatabaseException
+     * @var Configuration
      */
-    public function create(string $name, ?CreateDatabaseOptions $options = null): void;
+    private $configuration;
 
-    /**
-     * @param string $name
-     * @throws DatabaseException
-     */
-    public function drop(string $name);
+    public function __construct(array $params, ?Configuration $configuration = null)
+    {
+        $this->params = $params;
+        $this->configuration = $configuration ?? new Configuration();
+    }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function exists(string $name): bool;
+    public function getParams(): array
+    {
+        return $this->params;
+    }
 
-    /**
-     * @return array
-     */
-    public function getList(): array;
+    public function getConfiguration(): Configuration
+    {
+        return $this->configuration;
+    }
 }

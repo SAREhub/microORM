@@ -13,9 +13,31 @@
  * limitations under the License.
  */
 
-namespace SAREhub\MicroORM\Entity;
+namespace SAREhub\MicroORM\Schema;
 
+use Doctrine\DBAL\Schema\Schema;
+use SAREhub\Commons\Task\Task;
 
-class EntityNotFoundException extends \Exception
+class CreateSchemaTask implements Task
 {
+    /**
+     * @var Schema
+     */
+    private $schema;
+
+    /**
+     * @var DatabaseSchemaHelper
+     */
+    private $schemaHelper;
+
+    public function __construct(DatabaseSchemaHelper $schemaHelper, Schema $schema)
+    {
+        $this->schema = $schema;
+        $this->schemaHelper = $schemaHelper;
+    }
+
+    public function run()
+    {
+        $this->schemaHelper->create($this->schema);
+    }
 }

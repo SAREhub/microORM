@@ -1,24 +1,32 @@
 <?php
+/**
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace SAREhub\MicroORM\Connection;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use SAREhub\MicroORM\DatabaseException;
 
 interface ConnectionFactory
 {
     /**
      * Returns connection with selected database
+     * @param ConnectionOptions $options
      * @param string $databaseName
-     * @throws DBALException
+     * @throws DatabaseException
      * @return Connection
      */
-    public function createToDatabase(string $databaseName): Connection;
-
-    /**
-     * Returns connection without selected database(can be used to send command without database context)
-     * @throws DBALException
-     * @return Connection
-     */
-    public function createToHost(): Connection;
+    public function create(ConnectionOptions $options, string $databaseName = ""): Connection;
 }

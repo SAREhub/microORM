@@ -13,9 +13,25 @@
  * limitations under the License.
  */
 
-namespace SAREhub\MicroORM\Entity;
+namespace SAREhub\MicroORM\Connection;
 
+use Doctrine\DBAL\Connection;
 
-class EntityNotFoundException extends \Exception
+class ConnectionPingChecker
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function check(): bool
+    {
+        return $this->connection->ping();
+    }
+
 }

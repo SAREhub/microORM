@@ -1,4 +1,17 @@
 <?php
+/**
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace SAREhub\MicroORM\Connection;
 
@@ -23,34 +36,28 @@ class CachedConnectionFactoryTest extends TestCase
      */
     private $cachedFactory;
 
+    /**
+     * @var ConnectionOptions
+     */
+    private $options;
+
     protected function setUp()
     {
         $this->factory = \Mockery::mock(ConnectionFactory::class);
         $this->cachedFactory = new CachedConnectionFactory($this->factory);
+        $this->options = new ConnectionOptions(["param1" => 1, "param2" => 2]);
     }
 
     /**
      * @throws DBALException
      */
-    public function testCreateToDatabaseWhenSameNameUsedNextTime()
+    public function testCreateWhenSameNameUsedNextTime()
     {
         $expected = $this->createConnection();
-        $this->factory->expects("createToDatabase")->with("test_name")->once()->andReturn($expected);
-        $this->cachedFactory->createToDatabase("test_name");
+        $this->factory->expects("create")->with($this->options, "test_name")->once()->andReturn($expected);
+        $this->cachedFactory->create($this->options, "test_name");
 
-        $this->assertSame($expected, $this->cachedFactory->createToDatabase("test_name"));
-    }
-
-    /**
-     * @throws DBALException
-     */
-    public function testCreateToHostWhenNextTime()
-    {
-        $expected = $this->createConnection();
-        $this->factory->expects("createToHost")->with()->once()->andReturn($expected);
-        $this->cachedFactory->createToHost();
-
-        $this->assertSame($expected, $this->cachedFactory->createToHost());
+        $this->assertSame($expected, $this->cachedFactory->create($this->options, "test_name"));
     }
 
     /**

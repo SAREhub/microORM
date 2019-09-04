@@ -1,4 +1,17 @@
 <?php
+/**
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 namespace SAREhub\MicroORM\Connection;
 
@@ -21,30 +34,36 @@ class PrefixedConnectionFactoryTest extends TestCase
     /**
      * @var ConnectionFactory | MockInterface
      */
-    private $connectionFactory;
+    private $factory;
 
     /**
      * @var PrefixedConnectionFactory
      */
     private $prefixedFactory;
 
+    /**
+     * @var ConnectionOptions
+     */
+    private $options;
+
     protected function setUp()
     {
         $this->prefix = "test_prefix_";
-        $this->connectionFactory = \Mockery::mock(ConnectionFactory::class);
-        $this->prefixedFactory = new PrefixedConnectionFactory($this->prefix, $this->connectionFactory);
+        $this->factory = \Mockery::mock(ConnectionFactory::class);
+        $this->prefixedFactory = new PrefixedConnectionFactory($this->prefix, $this->factory);
+        $this->options = new ConnectionOptions([]);
     }
 
     /**
      * @throws DBALException
      */
-    public function testCreateToDatabase()
+    public function testCreateWhenNotEmptyDatabaseName()
     {
         $name = "test_name";
         $expected = \Mockery::mock(Connection::class);
-        $this->connectionFactory->expects("createToDatabase")->with($this->prefix . $name)->andReturn($expected);
+        $this->factory->expects("create")->with($this->options, $this->prefix . $name)->andReturn($expected);
 
-        $current = $this->prefixedFactory->createToDatabase($name);
+        $current = $this->prefixedFactory->create($this->options, $name);
 
         $this->assertSame($expected, $current);
     }
@@ -52,12 +71,12 @@ class PrefixedConnectionFactoryTest extends TestCase
     /**
      * @throws DBALException
      */
-    public function testCreateToHost()
+    public function testCreateWhenEmptyDatabaseName()
     {
         $expected = \Mockery::mock(Connection::class);
-        $this->connectionFactory->expects("createToHost")->andReturn($expected);
+        $this->factory->expects("create")->with($this->options, "")->andReturn($expected);
 
-        $current = $this->prefixedFactory->createToHost();
+        $current = $this->prefixedFactory->create($this->options, "");
 
         $this->assertSame($expected, $current);
     }
