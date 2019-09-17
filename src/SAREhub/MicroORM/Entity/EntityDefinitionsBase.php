@@ -17,7 +17,7 @@ abstract class EntityDefinitionsBase
     public static function get(): array
     {
         return [
-            ConfigurationProvider::class => autowire()->constructorParameter("entitiesPaths", static::entitiesPathDef()),
+            ConfigurationProvider::class => autowire()->constructorParameter("entitiesPaths", static::entitiesPathsDef()),
             Configuration::class => factory(ConfigurationProvider::class),
             CacheConfiguration::class => factory(EnvCacheConfigurationProvider::class),
             ProxyConfiguration::class => autowire()->constructorParameter("namespace", static::entityNamespaceDef()),
@@ -25,7 +25,7 @@ abstract class EntityDefinitionsBase
         ];
     }
 
-    protected static abstract function entitiesPathDef();
+    protected static abstract function entitiesPathsDef();
 
     protected static abstract function entityNamespaceDef();
 
