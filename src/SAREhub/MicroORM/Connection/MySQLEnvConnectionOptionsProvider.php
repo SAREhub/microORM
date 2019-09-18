@@ -29,7 +29,7 @@ class MySQLEnvConnectionOptionsProvider extends InvokableProvider
         self::ENV_PLATFORM => "MySQL57"
     ];
 
-    const DEFAULT_ENV_PREFIX = "DATABASE_";
+    const DEFAULT_ENV_PREFIX = "MYSQL_";
 
     /**
      * @var SecretValueProvider
