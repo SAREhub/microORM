@@ -20,13 +20,16 @@ class MySQLEnvConnectionOptionsProvider extends InvokableProvider
     const ENV_DRIVER = "DRIVER";
     const ENV_PLATFORM = "PLATFORM";
 
+    const ENV_CHARSET = "CHARSET";
+
     const ENV_PARAMS_SCHEMA = [
         self::ENV_HOST => "localhost",
         self::ENV_PORT => 3306,
         self::ENV_USER => "root",
         self::ENV_PASSWORD_SECRET => "",
         self::ENV_DRIVER => "pdo_mysql",
-        self::ENV_PLATFORM => "MySQL57"
+        self::ENV_PLATFORM => "MySQL57",
+        self::ENV_CHARSET => "utf8mb4"
     ];
 
     const DEFAULT_ENV_PREFIX = "MYSQL_";
