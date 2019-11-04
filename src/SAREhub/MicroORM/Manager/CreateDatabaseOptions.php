@@ -27,7 +27,7 @@ class CreateDatabaseOptions
      */
     private $ifNotExists = self::DEFAULT_IF_NOT_EXISTS;
 
-    public function newInstance(): self
+    public static function newInstance(): self
     {
         return new self();
     }
