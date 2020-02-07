@@ -17,7 +17,7 @@ class EntityManagerFactory
         try {
             return EntityManager::create($connection, $configuration);
         } catch (ORMException $e) {
-            DatabaseException::createFromOrm($e, "Create EntityManager error");
+            throw DatabaseException::createFromOrm($e, "Create EntityManager error");
         }
     }
 }
